@@ -23,4 +23,4 @@ galaxy_info:
   galaxy_tags: ['biolighthouse', 'dada2', 'R']
 
 dependencies:
- - tannerdowhy.conda
+ - tannerdowhy.ansible_role_conda
