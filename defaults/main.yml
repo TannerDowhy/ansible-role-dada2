@@ -1,0 +1,11 @@
+---
+# defaults file for ansible-role-dada2
+
+# The path to the conda util file
+conda_util_file: https://raw.githubusercontent.com/TannerDowhy/Ansible_Pipeline/master/utils/conda.py
+
+# The path to the DADA2 install template
+dada2_install_template: https://raw.githubusercontent.com/TannerDowhy/Ansible_Pipeline/master/utils/r_script_templates/dada2_biocmanager.R
+
+# Default name for the conda environment created
+conda_env_name: biolighthouse

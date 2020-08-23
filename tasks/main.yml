@@ -1,0 +1,63 @@
+---
+# tasks file for ansible-role-dada2
+
+- name: Create biolighthouse directory
+  file:
+    path: "{{ base_path }}/{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - .biolighthouse
+    - .biolighthouse/software
+    - .biolighthouse/software/R
+    - .biolighthouse/software/R/library
+
+- name: Detect environment
+  set_fact:
+    base_path: "{% if ansible_domain == 'cedar.computecanada.ca' %}{{ ansible_env.HOME }}/scratch{% else %}{{ ansible_env.HOME }}{% endif %}"
+  when: base_path is not defined
+
+- name: Create /tmp directory
+  file:
+    path: /tmp/biol
+    state: directory
+
+- name: Get util files
+  get_url:
+    url: "{{ conda_util_file }}"
+    dest: /tmp/biol/
+
+- name: Set conda executable variable
+  set_fact:
+    conda_executable: "{{ base_path }}/.biolighthouse/software/conda/bin/conda"
+  when: conda_executable is not defined
+
+- name: Create a conda environment
+  conda_create:
+    name: "bl_dada2"
+    executable: "{{ base_path }}/.biolighthouse/software/conda/bin/conda"
+    pyv: '3.6'
+
+- name: Put environment activation in .bashrc
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: "conda activate bl_dada2"
+
+- name: Install DADA2 via conda
+  conda_install:
+    name: bioconductor-dada2
+    version: 1.8.0
+    channel: [bioconda, conda-forge]
+    environment: bl_dada2
+    executable: "{{ conda_executable }}"
+
+- name: Remove environment activation in .bashrc
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    regexp: "^conda activate bl_*"
+    state: absent
+#
+# - name: Get Silva database
+#   get_url:
+#     url: https://zenodo.org/record/1172783/files/silva_nr_v132_train_set.fa.gz
+#     dest: "{{ base_path }}/.biolighthouse/DADA2/silva_nr_v132_train_set.fa.gz"
