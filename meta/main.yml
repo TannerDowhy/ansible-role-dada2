@@ -22,5 +22,5 @@ galaxy_info:
 
   galaxy_tags: ['biolighthouse', 'dada2', 'R']
 
-dependencies: []
-#  - biolighthouse.conda
+dependencies:
+ - tannerdowhy.conda
