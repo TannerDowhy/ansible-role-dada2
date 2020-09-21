@@ -17,16 +17,6 @@
     base_path: "{% if ansible_domain == 'cedar.computecanada.ca' %}{{ ansible_env.HOME }}/scratch{% else %}{{ ansible_env.HOME }}{% endif %}"
   when: base_path is not defined
 
-- name: Create /tmp directory
-  file:
-    path: /tmp/biol
-    state: directory
-
-- name: Get util files
-  get_url:
-    url: "{{ conda_util_file }}"
-    dest: /tmp/biol/
-
 - name: Set conda executable variable
   set_fact:
     conda_executable: "{{ base_path }}/.biolighthouse/software/conda/bin/conda"
@@ -56,8 +46,3 @@
     path: "{{ ansible_env.HOME }}/.bashrc"
     regexp: "^conda activate bl_*"
     state: absent
-#
-# - name: Get Silva database
-#   get_url:
-#     url: https://zenodo.org/record/1172783/files/silva_nr_v132_train_set.fa.gz
-#     dest: "{{ base_path }}/.biolighthouse/DADA2/silva_nr_v132_train_set.fa.gz"
